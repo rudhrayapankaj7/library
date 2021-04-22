@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Book</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1 style="color: red;"> <center> Library Home Page </center> </h1> <hr>
+
+    &nbsp;&nbsp; <h3> <center> &nbsp   Book Form(Bootstrap )</center> </h3>
+
+     <form action="/save-book/" method="POST">
+
+        {% csrf_token %}
+
+
+        {% if book %}
+        Book ID: <input type="text" value="{{book.id}}" name="id" readonly><br><br>
+        {% endif %}
+
+        <div class="form-row">
+          <div class="col">
+            &nbsp Book Name: <input type="text"   value="{{book.name}}" name="name"  class="form-control" placeholder="Book Name">
+          </div>
+
+          <div class="col">
+            &nbsp Book Author: <input type="text"  value="{{book.author}}"  name="author" class="form-control" placeholder="Author name">
+          </div>
+        </div></div><br /><br />
+     
+
+     
+        <div class="form-row">
+          <div class="col">
+            &nbsp Book Price:<input type="text"   value="{{book.price}}" name="price" class="form-control" placeholder="Book Price">
+          </div><br />
+
+          <div class="col">
+            &nbsp Book Qty:<input type="text"  value="{{book.qty}}" name="qty"  class="form-control" placeholder="Book Qty">
+          </div>
+        </div></div><br /><br />
+   
+
+      <div class="form-check form-check-inline">
+        {% if book.is_published %}
+        &nbsp Book Published:<input class="form-check-input" name="pub"  type="radio" checked >
+        {% else %}
+        &nbsp Book Published:<input class="form-check-input" name="pub"  type="radio" >
+         
+        {%endif %}
+      </div> 
+     
+
+
+    
+      {% if book %}
+      <button type="submit" class="btn btn-success" >UPDATE BOOK </button>
+      {% else %}
+      <button type="submit" class="btn btn-success" >ADD BOOK</button>
+      {%endif %}
+      
+                        
+    </form><br /><br />
+
+   
+
+    <a href= "all-delete-book/" button type="submit" class="btn btn-danger" >DELETE ALL BOOKS</button></a>
+    <a href= "all-restore-book/" button type="submit" class="btn btn-success" >RESTORE ALL BOOKS</button></a>
+
+
+   
+
+    <a href="/show-deleted-data/" class="btn btn-info" role="button">Show Deleted Data</a>
+    <h3>All Books</h3>
+
+    <table class="table table-striped table-dark">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">BOOK NAME</th>
+            <th scope="col">BOOK AUTHOR</th>
+            <th scope="col">BOOK QTY</th>
+            <th scope="col">BOOK PRICE</th>
+            <th scope="col">IS PUBLISHED</th>
+            <th scope="col">ACTIONS</th>
+
+
+          </tr>
+        </thead>
+        <tbody>
+            {% for b in books %}
+               
+                <tr>
+                    <td>{{b.id}}</td>
+                    <td>{{b.name}}</td>
+                    <td>{{b.author}}</td>
+                    <td>{{b.qty}}</td>
+                    <td>{{b.price}}</td>
+                    <td>{{b.is_published}}</td>
+                    <td>
+
+                        
+                        {% ifequal b.is_deleted "Y"  %}
+                        <a href="/h-delete-book/{{b.id}}/" class="btn btn-danger" role="button">HardDelete</a>|
+                        <a href="/restore/{{b.id}}/"class="btn btn-success" role="button">Restore</a> 
+
+                        {% endifequal  %}
+                        {% ifequal b.is_deleted "N"  %}
+                        <a href="/delete-book/{{b.id}}/" class="btn btn-danger" role="button">SoftDelete</a> |
+                        <a href="/edit-book/{{b.id}}/" class="btn btn-primary" role="button">Edit</a> 
+                        {% endifequal  %}
+                    </td>
+                </tr>
+                
+
+                {% endfor %}
+        </tbody>
+
+          </tr>
+        </tbody>
+      </table>
